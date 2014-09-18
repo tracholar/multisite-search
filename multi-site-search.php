@@ -16,7 +16,11 @@ function search_callback(){
 		$options = get_option('mss_options');
 		
 		if(($i = array_search($_GET['t_type'], $options['name'])) !== False){
-			
+			$host = parse_url($options['search_url'][$i], PHP_URL_HOST);
+			//filter local search 
+			if($host === parse_url(site_url(), PHP_URL_HOST) || in_array($options['search_url'][$i],array('/',''))){
+				return;
+			}
 			header('Location:'. str_replace('{$s}',$_GET['s'], $options['search_url'][$i]));
 			die();
 		}
